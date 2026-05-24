@@ -140,7 +140,7 @@ All variables must be present in `.env` on avalon2. See `.env.example` for the f
 | `MQTT_USERNAME` | _(set in .env)_ | MQTT broker username |
 | `MQTT_PASSWORD` | _(set in .env)_ | MQTT broker password |
 | `Z2M_TOPIC_PREFIX` | `zigbee2mqtt` | Zigbee2MQTT base topic prefix |
-| `TZ` | `America/Chicago` | Container timezone |
+| `TZ` | `Europe/Helsinki` | Container timezone (Salo, Finland) |
 
 ---
 
