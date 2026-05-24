@@ -90,18 +90,24 @@ Before declaring any task complete, confirm at minimum steps 1–3 above.
 
 ### Deploy commands
 
-**After pushing a feature branch:**
+**First-time setup:**
 ```bash
-# On avalon2
-git pull origin <branch-name>
-sudo docker compose up -d --build
+git clone git@github.com:geoffnichols1339/node-red.git
+cd node-red
+cp .env.example .env   # fill in secrets
+sudo docker compose up -d
 ```
 
-**After merging to main:**
+**Every subsequent deploy:**
 ```bash
-# On avalon2
-git pull origin main
-sudo docker compose up -d --build
+git pull
+sudo docker compose restart node-red
+```
+
+If `docker-compose.yml` itself changed, use `up -d` instead of `restart`:
+```bash
+git pull
+sudo docker compose up -d
 ```
 
 **View logs:**
