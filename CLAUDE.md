@@ -17,7 +17,7 @@ These are non-negotiable. Do not mark any task complete if either has been skipp
 | **Name** | node-red Home Automation |
 | **Purpose** | Node-RED Docker Compose for home automation — backyard lights, valve control, MQTT/Zigbee integration, dashboards |
 | **Repo** | git@github.com:geoffnichols1339/node-red.git |
-| **Deployed service** | http://192.168.7.14:1880 |
+| **Deployed service** | http://192.168.7.14:8040 |
 | **Stack snippets** | _none yet — add `@snippets/docker.md` if Docker conventions grow_ |
 
 ---
@@ -119,8 +119,8 @@ sudo docker compose restart node-red
 
 | Service | Internal port | External port (avalon2) |
 |---------|--------------|------------------------|
-| Node-RED UI | 1880 | **1880** |
-| Node-RED Dashboard | 1880 (`/ui`) | **1880** (same) |
+| Node-RED UI | 1880 | **8040** |
+| Node-RED Dashboard | 1880 (`/ui`) | **8040** (same) |
 
 MQTT broker and Zigbee2MQTT ports are managed by those existing services — not defined here.
 
@@ -219,8 +219,6 @@ data/                    Mounted into Node-RED container at /data (mostly gitign
 > **NODE_RED_ADMIN_PASSWORD_HASH must be a bcrypt hash, not a plain password.** Generate with:
 > `docker run --rm nodered/node-red node -e "const bcrypt=require('bcryptjs'); bcrypt.hash('yourpassword',8,(e,h)=>console.log(h))"`
 > Plain passwords will silently fail authentication.
-
-> **`data/` volume ownership** — Node-RED container runs as UID 1000. If `data/` is created by root on the host, the container will fail to write flows. Fix: `sudo chown -R 1000:1000 ./data` on avalon2 after first `docker compose up`.
 
 > **MQTT credential injection** — Node-RED stores MQTT credentials encrypted in `data/flows_cred.json`. Changing `NODE_RED_CREDENTIAL_SECRET` after flows are deployed will break decryption. Set the secret once and never rotate it without re-entering credentials.
 

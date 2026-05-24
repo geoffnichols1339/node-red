@@ -4,7 +4,8 @@ services:
     container_name: node-red
     restart: unless-stopped
     ports:
-      - "1880:1880"
+      - "8040:1880"
+    user: root
     volumes:
       - ./data:/data
     environment:
