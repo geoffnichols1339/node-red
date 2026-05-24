@@ -6,7 +6,8 @@ services:
     ports:
       - "8040:1880"
     volumes:
-      - ./data:/data
+      - node_red_data:/data
+      - ./data/settings.js:/data/settings.js:ro
     environment:
       - TZ=${TZ}
       - NODE_RED_CREDENTIAL_SECRET=${NODE_RED_CREDENTIAL_SECRET}
@@ -18,3 +19,6 @@ services:
       - Z2M_TOPIC_PREFIX=${Z2M_TOPIC_PREFIX}
     env_file:
       - .env
+
+volumes:
+  node_red_data:

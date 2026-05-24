@@ -45,7 +45,8 @@ This is a **Docker Compose / Node-RED** project. There is no Python or Node buil
 
 - **Runtime**: Node-RED (official Docker image `nodered/node-red`)
 - **Compose file**: `docker-compose.yml`
-- **Persistent data**: `./data/` volume mounted to `/data` inside the container — flows, credentials, and settings live here
+- **Persistent data**: named Docker volume `node_red_data` mounted to `/data` — flows, credentials, and node_modules live here; Docker manages ownership automatically
+- `data/settings.js` is bind-mounted read-only on top so config changes deploy via git without touching the named volume
 - **Protocols**: MQTT (via `node-red-contrib-mqtt` built-in) and Zigbee (via Zigbee2MQTT topics on MQTT)
 - **Dashboards**: Node-RED Dashboard (`node-red-dashboard`) for quick panels; optionally an external FastAPI service (separate project) for richer UI
 - **Shell scripts**: `bash` with `set -euo pipefail`; lint with `shellcheck`
@@ -204,9 +205,12 @@ docker-compose.yml       Main Compose definition
 .gitignore
 CLAUDE.md
 
-data/                    Mounted into Node-RED container at /data (mostly gitignored)
-  settings.js            Node-RED settings overrides (committed — no secrets here)
-  flows.json             Active flows (gitignored — may contain embedded values)
+data/
+  settings.js            Node-RED settings overrides — bind-mounted read-only into container
+
+[Docker named volume: node_red_data]
+  flows.json             Active flows — lives in named volume, managed by Docker
+  flows_cred.json        Encrypted credentials — lives in named volume
 
 .claude/
   settings.json          Claude Code tool permissions
@@ -215,8 +219,6 @@ data/                    Mounted into Node-RED container at /data (mostly gitign
 ---
 
 ## 11. Gotchas & known quirks
-
-> **`data/` volume ownership** — Node-RED container runs as UID 1000. If `data/` is owned by root on the host, the container will fail to write flows. Fix: `sudo chown -R 1000:1000 ./data` on avalon2 after first `docker compose up`.
 
 > **NODE_RED_ADMIN_PASSWORD_HASH must be a bcrypt hash, not a plain password.** Generate with:
 > `docker run --rm nodered/node-red node -e "const bcrypt=require('bcryptjs'); bcrypt.hash('yourpassword',8,(e,h)=>console.log(h))"`
