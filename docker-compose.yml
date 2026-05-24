@@ -1,0 +1,20 @@
+services:
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./data:/data
+    environment:
+      - TZ=${TZ}
+      - NODE_RED_CREDENTIAL_SECRET=${NODE_RED_CREDENTIAL_SECRET}
+      # Expose MQTT connection vars so flows can reference them via env substitution
+      - MQTT_HOST=${MQTT_HOST}
+      - MQTT_PORT=${MQTT_PORT}
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+      - Z2M_TOPIC_PREFIX=${Z2M_TOPIC_PREFIX}
+    env_file:
+      - .env

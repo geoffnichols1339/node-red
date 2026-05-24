@@ -1,0 +1,22 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node-RED runtime data (may contain embedded secrets or machine-specific state)
+data/flows*.json
+data/flows_cred*.json
+data/.config.*
+data/context/
+data/node_modules/
+data/package-lock.json
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code
+.claude/settings.local.json

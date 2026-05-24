@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git*)",
+      "Bash(docker*)",
+      "Bash(find*)",
+      "Bash(cat*)",
+      "Bash(ls*)",
+      "Bash(cp*)",
+      "Bash(mv*)",
+      "Bash(mkdir*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'cmd=$(cat | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get(\\\"tool_input\\\",{}).get(\\\"command\\\",\\\"\\\"))\" 2>/dev/null); if echo \"$cmd\" | grep -qE \"(merge|push).*(main)\"; then echo \"MANDATORY: Per CLAUDE.md Section 5, run the merge-to-main CLAUDE.md update checklist now (sections 10, 11, 12, 7 — then show diff to user).\"; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
