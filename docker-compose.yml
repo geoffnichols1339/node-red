@@ -5,7 +5,6 @@ services:
     restart: unless-stopped
     ports:
       - "8040:1880"
-    user: root
     volumes:
       - ./data:/data
     environment:

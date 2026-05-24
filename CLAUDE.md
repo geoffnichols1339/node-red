@@ -216,6 +216,8 @@ data/                    Mounted into Node-RED container at /data (mostly gitign
 
 ## 11. Gotchas & known quirks
 
+> **`data/` volume ownership** — Node-RED container runs as UID 1000. If `data/` is owned by root on the host, the container will fail to write flows. Fix: `sudo chown -R 1000:1000 ./data` on avalon2 after first `docker compose up`.
+
 > **NODE_RED_ADMIN_PASSWORD_HASH must be a bcrypt hash, not a plain password.** Generate with:
 > `docker run --rm nodered/node-red node -e "const bcrypt=require('bcryptjs'); bcrypt.hash('yourpassword',8,(e,h)=>console.log(h))"`
 > Plain passwords will silently fail authentication.
