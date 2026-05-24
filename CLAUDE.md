@@ -64,7 +64,7 @@ This is a **Docker Compose / Node-RED** project. There is no Python or Node buil
 No automated test suite for flows. Manual verification steps:
 
 1. `sudo docker compose up -d` on avalon2 — confirm container starts cleanly
-2. Open `http://192.168.7.14:1880` — confirm Node-RED UI loads
+2. Open `http://192.168.7.14:8040` — confirm Node-RED UI loads
 3. Check MQTT broker connection node shows green (connected)
 4. Trigger a test MQTT message and verify the correct flow fires
 5. Confirm backyard light / valve control responds as expected
@@ -226,8 +226,9 @@ data/
 
 ## 11. Gotchas & known quirks
 
-> **NODE_RED_ADMIN_PASSWORD_HASH must be a bcrypt hash, not a plain password.** Generate with:
-> `docker run --rm nodered/node-red node -e "const bcrypt=require('bcryptjs'); bcrypt.hash('yourpassword',8,(e,h)=>console.log(h))"`
+> **NODE_RED_ADMIN_PASSWORD_HASH must be a bcrypt hash, not a plain password.** The `nodered/node-red` image has an entrypoint that ignores a plain `node` command — must use `--entrypoint`:
+> `sudo docker run --rm --entrypoint node nodered/node-red -e "const b=require('bcryptjs'); b.hash('YOUR_PASSWORD',8,(e,h)=>console.log(h))"`
+> Or if the container is already running: `sudo docker exec node-red node -e "const b=require('bcryptjs'); b.hash('YOUR_PASSWORD',8,(e,h)=>console.log(h))"`
 > Plain passwords will silently fail authentication.
 
 > **MQTT credential injection** — Node-RED stores MQTT credentials encrypted in `data/flows_cred.json`. Changing `NODE_RED_CREDENTIAL_SECRET` after flows are deployed will break decryption. Set the secret once and never rotate it without re-entering credentials.
